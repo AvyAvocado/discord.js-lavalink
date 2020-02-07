@@ -3,7 +3,7 @@ A lavalink client for Discord.js with queue support which is just a single Array
 
 
 ## Things to consider
-If you really want to use this thing you should this things on your code:
+If you really want to use this package you should know this things for your code:
 - `<PlayerManager>` receives `vchannel` instead of `channel` but also `tchannel` which is used to annouce things about the Player
 ```javascript
 const player = await client.player.join({

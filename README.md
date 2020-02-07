@@ -1,13 +1,5 @@
-
-
 # discord.js-lavalink
 A lavalink client for Discord.js with queue support which is just a single Array + other changes
-
-## Documentation
-[**https://github.com/MrJacz/discord.js-lavalink**](https://github.com/MrJacz/discord.js-lavalink/)
-
-
-~~For a proper example look at [**example/app.js**](https://github.com/MrJacz/discord.js-lavalink/blob/master/example/app.js)~~ this thing doesn´t work because i did some changes
 
 
 ## Things to consider
@@ -61,3 +53,10 @@ Player {
   timestamp: 1581112410932
 }
 ```
+
+
+## Documentation
+[**https://github.com/MrJacz/discord.js-lavalink**](https://github.com/MrJacz/discord.js-lavalink/)
+
+
+~~For a proper example look at [**example/app.js**](https://github.com/MrJacz/discord.js-lavalink/blob/master/example/app.js)~~ this thing doesn´t work because i did some changes

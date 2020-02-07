@@ -1,112 +1,63 @@
-[![Discord](https://discordapp.com/api/guilds/323779330033319941/embed.png)](https://discord.gg/J8AqH4A)
-[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/discord.js-lavalink)
-[![npm downloads](https://img.shields.io/npm/dt/discord.js-lavalink.svg?maxAge=3600)](https://www.npmjs.com/package/discord.js-lavalink)
-[![NPM version](https://badge.fury.io/js/discord.js-lavalink.svg)](http://badge.fury.io/js/discord.js-lavalink)
-[![Build Status](https://travis-ci.org/MrJacz/discord.js-lavalink.svg?branch=master)](https://travis-ci.org/MrJacz/discord.js-lavalink)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b50839d781c24a94a4e1c17342a147bd)](https://www.codacy.com/app/MrJacz/discord.js-lavalink?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MrJacz/discord.js-lavalink&amp;utm_campaign=Badge_Grade)
-[![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
-[![dependencies Status](https://david-dm.org/mrjacz/discord.js-lavalink/status.svg)](https://david-dm.org/mrjacz/discord.js-lavalink)
-[![devDependencies Status](https://david-dm.org/mrjacz/discord.js-lavalink/dev-status.svg)](https://david-dm.org/mrjacz/discord.js-lavalink?type=dev)
-[![NPM](https://nodei.co/npm/discord.js-lavalink.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/discord.js-lavalink/)
+
 
 # discord.js-lavalink
-A lavalink client for Discord.js
+A lavalink client for Discord.js with queue support which is just a single Array + other changes
 
 ## Documentation
-[**mrjacz.github.io/discord.js-lavalink**](https://mrjacz.github.io/discord.js-lavalink/)
+[**https://github.com/MrJacz/discord.js-lavalink**](https://github.com/MrJacz/discord.js-lavalink/)
 
-## Installation
 
-**For stable**
-```bash
-# Using yarn
-yarn add discord.js-lavalink
+~~For a proper example look at [**example/app.js**](https://github.com/MrJacz/discord.js-lavalink/blob/master/example/app.js)~~ this thing doesn´t work because i did some changes
 
-# Using npm
-npm install discord.js-lavalink
-```
 
-**For Development**
-```bash
-# Using yarn
-yarn add MrJacz/discord.js-lavalink
-
-# Using npm
-npm install MrJacz/discord.js-lavalink
-```
-
-## LavaLink configuration
-Download from [the CI server](https://ci.fredboat.com/viewLog.html?buildId=lastSuccessful&buildTypeId=Lavalink_Build&tab=artifacts&guest=1)
-
-Put an `application.yml` file in your working directory. [Example](https://github.com/Frederikam/Lavalink/blob/master/LavalinkServer/application.yml.example)
-
-Run with `java -jar Lavalink.jar`
-
-## The issue tracker is for issues only
-If you're having a problem with the module contact us in the [**Discord Server**](https://discord.gg/J8AqH4A)
-
-# Implementation
-Start by creating a new `PlayerManager` passing an array of nodes and an object with `user` the client's user id and `shards` The total number of shards your bot is operating on.
-
+## Things to consider
+If you really want to use this thing you should this things on your code:
+- <PlayerManager> receives `vchannel` instead of `channel` but also `tchannel` which is used to annouce things about the Player
 ```javascript
-const { PlayerManager } = require("discord.js-lavalink");
-
-const nodes = [
-    { host: "localhost", port: 2333, password: "youshallnotpass" }
-];
-
-const manager = new PlayerManager(client, nodes, {
-    user: client.user.id, // Client id
-    shards: shardCount // Total number of shards your bot is operating on
-});
+const player = await client.player.join({
+    guild: message.guild.id,
+    vchannel: message.member.voiceChannelID,
+    tchannel: message.channel.id,
+    host: client.player.nodes.first().host
+  });
 ```
-
-Resolving tracks using LavaLink REST API
-
+- <Player> needs the whole song instead of the track's Base64 string
 ```javascript
-const fetch = require("node-fetch");
-const { URLSearchParams } = require("url");
-
-async function getSongs(search) {
-    const node = client.player.nodes.first();
-
-    const params = new URLSearchParams();
-    params.append("identifier", search);
-
-    return fetch(`http://${node.host}:${node.port}/loadtracks?${params.toString()}`, { headers: { Authorization: node.password } })
-        .then(res => res.json())
-        .then(data => data.tracks)
-        .catch(err => {
-            console.error(err);
-            return null;
-        });
+{
+  track: 'QAAA1gIAbOOAkOadseaWueODnOODvOOCq+ODq+OAkSDjgIzjgr/jgqTjg4vjg7zjg6rjg4jjg6vjg7vjgqLjgrjjgqLjg7Pjgr/jg6DjgI0g44CQU2hpYmF5YW5SZWNvcmRz44CRIOOAkFN1YmJlZOOAkQAQQWxpY2UgTWFyZ2F0cm9pZAAAAAAABWbQAAtTbUtLRzZ0Q1AzTQABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNtS0tHNnRDUDNNAAd5b3V0dWJlAAAAAAAAAAA=',
+  info: {
+    identifier: 'SmKKG6tCP3M',
+    isSeekable: true,
+    author: 'Alice Margatroid',
+    length: 354000,
+    isStream: false,
+    position: 0,
+    title: '【東方ボーカル】 「タイニーリトル・アジアンタム」 【ShibayanRecords】 【Subbed】',
+    uri: 'https://www.youtube.com/watch?v=SmKKG6tCP3M',
+    requester: '『 』#5212'
+  }
 }
-
-getSongs("ytsearch:30 second song").then(songs => {
-    // handle loading of the tracks somehow ¯\_(ツ)_/¯
-});
 ```
-
-Joining and Leaving channels
-
+- <Player> now looks like this
 ```javascript
-// Join
-manager.join({
-    guild: guildId, // Guild id
-    channel: channelId, // Channel id
-    host: "localhost" // lavalink host, based on array of nodes
-}).then(player => {
-    player.play(track); // Track is a base64 string we get from Lavalink REST API
-
-    player.once("error", error => console.error(error));
-    player.once("end", data => {
-        if (data.reason === "REPLACED") return; // Ignore REPLACED reason to prevent skip loops
-        // Play next song
-    });
-});
-
-// Leave voice channel and destory Player
-manager.leave(guildId); // Player ID aka guild id
+Player {
+  _events: [Object: null prototype] {
+    error: [ [Function], [Function] ],
+    end: [Function: bound onceWrapper] {
+      listener: [AsyncFunction (anonymous)]
+    }
+  },
+  _eventsCount: 2,
+  _maxListeners: undefined,
+  id: '607740801853947904',
+  vchannel: '607740801853947908',
+  tchannel: '652253810592448523',
+  queue: [],
+  requester: '『 』#5212',
+  playing: true,
+  paused: false,
+  state: { volume: 100, position: 85100, time: 1581112496628 },
+  track: 'QAAA1gIAbOOAkOadseaWueODnOODvOOCq+ODq+OAkSDjgIzjgr/jgqTjg4vjg7zjg6rjg4jjg6vjg7vjgqLjgrjjgqLjg7Pjgr/jg6DjgI0g44CQU2hpYmF5YW5SZWNvcmRz44CRIOOAkFN1YmJlZOOAkQAQQWxpY2UgTWFyZ2F0cm9pZAAAAAAABWbQAAtTbUtLRzZ0Q1AzTQABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNtS0tHNnRDUDNNAAd5b3V0dWJlAAAAAAAAAAA=',
+  timestamp: 1581112410932
+}
 ```
-
-For a proper example look at [**example/app.js**](https://github.com/MrJacz/discord.js-lavalink/blob/master/example/app.js)

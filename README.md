@@ -13,7 +13,7 @@ const player = await client.player.join({
     host: client.player.nodes.first().host
   });
 ```
-- `<Player>` needs the whole song instead of the track's Base64 string
+- `<Player>` needs the whole song and the requester's tag instead of the track's Base64 string 
 ```javascript
 {
   track: 'QAAA1gIAbOOAkOadseaWueODnOODvOOCq+ODq+OAkSDjgIzjgr/jgqTjg4vjg7zjg6rjg4jjg6vjg7vjgqLjgrjjgqLjg7Pjgr/jg6DjgI0g44CQU2hpYmF5YW5SZWNvcmRz44CRIOOAkFN1YmJlZOOAkQAQQWxpY2UgTWFyZ2F0cm9pZAAAAAAABWbQAAtTbUtLRzZ0Q1AzTQABACtodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNtS0tHNnRDUDNNAAd5b3V0dWJlAAAAAAAAAAA=',
